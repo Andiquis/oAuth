@@ -1,0 +1,84 @@
+# =========================
+# 📦 Dependencias
+# =========================
+node_modules/
+jspm_packages/
+
+# =========================
+# 🧠 TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# 🚀 Build / Output
+# =========================
+dist/
+build/
+
+# =========================
+# 🪵 Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# =========================
+# 🧪 Tests / Coverage
+# =========================
+coverage/
+.nyc_output/
+
+# =========================
+# ⚙️ Variables de entorno
+# =========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================
+# 🧑‍💻 IDEs / Editores
+# =========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# =========================
+# 🧊 Archivos del sistema
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# 🗂️ Temporales
+# =========================
+.temp/
+.tmp/
+
+# =========================
+# ⚙️ Runtime
+# =========================
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# 📊 Reportes
+# =========================
+report.*.json
