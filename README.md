@@ -1,161 +1,149 @@
-# 🌐 RosaNegra oAuth API
+<div align="center">
+
+<img src="assets/model_oauth.png" alt="Modelo de OAuth" width="300"/>
+
+<br/>
+
+# 🌐 RosaNegra OAuth API
+
+### *Proveedor Centralizado de Identidad (IAM) y Autenticación basada en Roles*
+
+<br/>
+
+<p>
+  <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white"/>
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"/>
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white"/>
+</p>
+
+</div>
+
+<br />
 
 ## 📋 Descripción General
 
-El proyecto **RosaNegra oAuth API** es un sistema centralizado de identidad y autenticación diseñado para gestionar usuarios, roles y permisos en aplicaciones distribuidas. Este backend está construido con **NestJS**, utilizando **TypeORM** para la gestión de bases de datos y **JWT** para la autenticación segura.
+El proyecto **RosaNegra oAuth API** es un sistema backend centralizado de identidad y autenticación diseñado para gestionar usuarios, perfiles multinivel y permisos en arquitecturas distribuidas (tanto para clientes finales como personal corporativo). 
 
-<p align="center">
-  <img src="assets/model_oauth.png" alt="Modelo de OAuth" width="400" style="border-radius:15px;">
-</p>
+Ha sido construido bajo **Clean Architecture** utilizando **NestJS**, con un esquema altamente relacional en **MySQL (TypeORM)**, garantizando flujos inquebrantables con doble guardia de seguridad (Access & Refresh Tokens).
+
+> 💡 **Nota de Desarrollo:** Este entorno permite la administración rigurosa de control de accesos basados en roles dinámicos (RBAC Multirol), separando contablemente y de forma auditable la transaccionalidad operativa del negocio.
 
 ---
 
 ## 📑 Índice
 
 - [Descripción General](#-descripción-general)
-- [Características](#-características)
-- [Arquitectura del Proyecto](#-arquitectura-del-proyecto)
-- [Estructura de Archivos](#-estructura-de-archivos)
-- [Requisitos Previos](#-requisitos-previos)
-- [Instalación y Ejecución](#-instalación-y-ejecución)
-- [Documentación Swagger](#-documentación-swagger)
-- [Tecnologías Utilizadas](#️-tecnologías-utilizadas)
-- [Licencia](#-licencia)
+- [Características Nucleares](#-características-nucleares)
+- [📚 Documentación Profunda](#-documentación-profunda-arquitectura)
+- [Arquitectura y Estructura](#-arquitectura-y-estructura)
+- [Puesta en Marcha (Instalación)](#-puesta-en-marcha)
+- [Tecnologías y Herramientas](#️-tecnologías-y-herramientas)
 
 ---
 
-## ✨ Características
+## ✨ Características Nucleares
 
-### Funcionalidades Principales
-
-| Característica          | Descripción                                                                |
-| ----------------------- | -------------------------------------------------------------------------- |
-| **Autenticación JWT**   | Generación y validación de tokens JWT para sesiones seguras.               |
-| **Gestión de Usuarios** | CRUD completo para usuarios, incluyendo roles y permisos.                  |
-| **Roles Jerárquicos**   | Soporte para roles como `Admin`, `SuperAdmin`, y usuarios regulares.       |
-| **Validaciones**        | Validación de datos con `class-validator` y `ValidationPipe`.              |
-| **Swagger UI**          | Documentación interactiva generada automáticamente.                        |
-| **CORS**                | Configuración de CORS para permitir solicitudes desde diferentes orígenes. |
+| Característica | Descripción |
+| :--- | :--- |
+| 🛡️ **Seguridad Dual (JWT)** | Ciclo de vida robusto separando *Access Tokens* (temporales en memoria) y *Refresh Tokens* (aislados en cookies HTTPOnly). |
+| 👥 **RBAC Multirol Único** | Un usuario puede asumir contextos operativos secundarios (Modalidades de Login) sin heredar permisos estructurales globalizados. |
+| 🛂 **Onboarding Burocrático** | Flujos B2B aislados. Los administradores postulantes son avalados estrictamente mediante *Magic Links* por un Tribunal SuperAdmin. |
+| 🧪 **Swagger Vivo** | Consola dinámica interactiva auto-documentada en todos los endpoints expuestos de la API. |
+| 📧 **Mailing Integrado** | Motor de notificaciones asíncronas para validación de códigos de 6 dígitos OTP de doble factor. |
 
 ---
 
-## 🏗 Arquitectura del Proyecto
+## 📚 Documentación Profunda (Arquitectura)
 
-```
+> [!IMPORTANT]  
+> Este `README` sirve únicamente para arrancar y testear el servidor. Si tú o nuevos miembros del equipo necesitan entender las decisiones de negocio profundas, los esquemas de bases de datos exactos, y conocer los flujos de "Modalidades de Login Interactivos", revisen el manual del proyecto arquitectónico:
+>
+> 👉 **[LEER DOCUMENTACIÓN MAESTRA DE IDENTIDAD Y ROLES](./docs/documentacion_maestra.md)**
+
+---
+
+## 🏗 Arquitectura y Estructura Módulos
+
+```text
 backend/
 ├── src/
-│   ├── admin/                     # Módulo de administración
-│   │   ├── dto/                   # DTOs para validaciones
-│   │   ├── admin.service.ts       # Lógica de negocio
-│   │   └── admin.controller.ts    # Controladores REST
-│   ├── auth/                      # Módulo de autenticación
-│   ├── users/                     # Módulo de usuarios
-│   ├── main.ts                    # Punto de entrada principal
-│   └── app.module.ts              # Módulo raíz
-├── package.json                   # Dependencias y scripts
-├── tsconfig.json                  # Configuración de TypeScript
-└── nest-cli.json                  # Configuración de NestJS CLI
+│   ├── core/                      # Infraestructura, Seeders, Mailing y Base de Datos
+│   ├── auth/                      # Motor JWT y Guards Globales
+│   ├── users/                     # Módulo B2C (Usuarios/Clientes regulares)
+│   ├── admin/                     # Onboarding de Prospectos Operativos
+│   ├── superadmin/                # Panel de Concesiones y Tribunal Aprobatorio
+│   ├── main.ts                    # Punto de bootstrap integral
+│   └── app.module.ts              # Orquestador Raíz
+├── docs/                          # Librería de manuales Markdown de negocio (Documentación)
+├── package.json                   # Dependencias Base
+└── tsconfig.json                  # Compilador Estricto
 ```
-
----
-
-## 📂 Estructura de Archivos
-
-### Módulos Principales
-
-- **Admin:** Gestión de solicitudes de administrador y promoción a superadmin.
-- **Auth:** Autenticación y generación de tokens JWT.
-- **Users:** CRUD de usuarios y gestión de roles.
 
 ---
 
 ## 🔐 Flujo de Autenticación con JWT
 
 <p align="center">
-  <img src="assets/vscode_captura.png" alt="Captura de VSCode" width="400" style="border-radius:15px;">
+  <img src="assets/vscode_captura.png" alt="Captura JWT Flow" width="650" style="border-radius:10px;">
 </p>
 
-### 1. Login Básico
-
-1. El usuario envía sus credenciales al backend.
-2. El backend valida las credenciales y genera un **Access Token**.
-3. El token se envía al cliente y se usa para acceder a rutas protegidas.
-
-### 2. Access y Refresh Tokens
-
-- **Access Token:** Token de corta duración para acceder a recursos.
-- **Refresh Token:** Token de larga duración para renovar el Access Token.
+1. **Credenciales IN:** El usuario despacha sus datos de sesión o contexto (Ej: `activeRole` solicitado) vía `POST /auth/login`.
+2. **Access Token OUT:** Se emite un token rápido de corto tiempo de vida para desbloquear y autorizar las rutas protegidas.
+3. **Refresh Transparente:** Al caducar el acceso temporal, el aplicativo se renueva silenciosamente por trasfondo solicitando un nuevo par de ingresos, evitando cerrar la sesión de golpe.
 
 ---
 
-## ⚙️ Requisitos Previos
+## 🚀 Puesta en Marcha
 
+### Requisitos Previos
 - Node.js >= 18.x
-- npm o pnpm
-- Base de datos MySQL
+- Gestor de paquetes nativo recomendado: `pnpm` (`npm install -g pnpm`)
+- Motor Local o Remoto de base de datos **MySQL**
 
----
+### 1. Clonación e Instalación
+```bash
+git clone <URL del repositorio>
+cd backend
+pnpm install
+```
 
-## 🚀 Instalación y Ejecución
+### 2. Variables de Entorno
+Copia el archivo base y vincula tus credenciales, puertos y correos emisores a tu base de datos y llaves algorítmicas secretas (JWT Secrets):
+```bash
+cp .env.example .env
+```
 
-1. Clonar el repositorio:
+### 3. Ejecución del Servidor
+Levanta la API en modo de vigilancia local para desarrollo en vivo:
+```bash
+pnpm start:dev
+```
 
-   ```bash
-   git clone <URL del repositorio>
-   cd backend
-   ```
-
-2. Instalar dependencias:
-
-   ```bash
-   pnpm install
-   ```
-
-3. Configurar variables de entorno:
-   Crear un archivo `.env` basado en `.env.example` y configurar las credenciales de la base de datos.
-
-4. Ejecutar el servidor en modo desarrollo:
-
-   ```bash
-   pnpm start:dev
-   ```
-
-5. Acceder a la documentación Swagger:
-   Visita `http://localhost:3000/api` para explorar los endpoints.
+### 4. Portal del Desarrollador (Swagger UI)
+Si recibes un bloque o necesitas validar un Endpoint, dirígete aquí:
+- 👉 **URL Rápida Local:** [http://localhost:3000/api](http://localhost:3000/api)
 
 <p align="center">
-  <img src="assets/swager_captura.png" alt="Captura de Swagger" width="400" style="border-radius:15px;">
+  <br>
+  <img src="assets/swager_captura.png" alt="Swagger Consola" width="650" style="border-radius:10px; border: 1px solid #444;">
 </p>
 
 ---
 
-## 📜 Documentación Swagger
+## 🛠️ Tecnologías y Herramientas
 
-La API incluye documentación interactiva generada automáticamente con Swagger. Para acceder:
-
-- URL: `http://localhost:3000/api`
-- Tags disponibles:
-  - **auth**: Autenticación con JWT
-  - **users**: Gestión de usuarios
-  - **admin**: Gestión de solicitudes de administrador
-  - **superadmin**: Funciones exclusivas de superadministradores
-
----
-
-## 🛠️ Tecnologías Utilizadas
-
-| Tecnología   | Versión | Propósito                              |
-| ------------ | ------- | -------------------------------------- |
-| **NestJS**   | ^11.0.1 | Framework backend                      |
-| **TypeORM**  | ^0.3.28 | ORM para bases de datos relacionales   |
-| **JWT**      | ^11.0.2 | Autenticación basada en tokens         |
-| **MySQL**    | ^3.22.1 | Base de datos relacional               |
-| **Swagger**  | ^11.3.0 | Generación de documentación automática |
-| **Prettier** | ^3.2.0  | Formateo de código                     |
-| **ESLint**   | ^9.18.0 | Linter para mantener calidad de código |
+| Dependencia | Versión | Tipo en la Arquitectura |
+| :--- | :--- | :--- |
+| **NestJS** | `^11.0.1` | Framework MVC Centralizado |
+| **TypeORM** | `^0.3.28` | Capa SQL Abstraída hacia Clases y Entidades |
+| **Passport/JWT** | `^11.0.2` | Emisión, Verificación y Firmas Simétricas HMAC |
+| **MySQL** | `^3.22.1` | Persistencia Relacional Transaccional (ACID) |
+| **Swagger**| `^11.3.0` | Inspección de REST Controller |
 
 ---
 
-## 📄 Licencia
-
-Este proyecto está bajo la licencia **UNLICENSED**. Para más detalles, consulta el archivo `LICENSE`.
+<div align="center">
+  <p><strong>RosaNegra System</strong> · Construido bajo estándares de <i>Clean Architecture</i></p>
+  <p>Licencia: UNLICENSED</p>
+</div>
